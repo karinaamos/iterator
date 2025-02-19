@@ -1,78 +1,79 @@
-#include <iterator>
+#include <iterator> // Подключаем библиотеку iterator для работы с итераторами
 
-
-struct  Iterator{
-    using iterator_category = std::forward_iterator_tag;
-    using difference_type = std::ptrdiff_t;
-    using value_type = int;
-    using pointer=  int*;
-    using reference =  int&;
-    Iterator(pointer ptr):_ptr(ptr){};
-    reference operator*()const{return *_ptr;};
-    pointer operator->(){return _ptr;};
-    Iterator operator++(int){
-        Iterator tmp=*this;
-        ++(*this);
-        return tmp;
+struct  Iterator{ // Объявляем структуру Iterator
+    using iterator_category = std::forward_iterator_tag; // Определяем категорию итератора: forward_iterator (однонаправленный)
+    using difference_type = std::ptrdiff_t; // Определяем тип для разности между итераторами (обычно для вычисления расстояния между элементами)
+    using value_type = int; // Определяем тип значения, на которое указывает итератор (целое число)
+    using pointer=  int*; // Определяем тип указателя на значение (указатель на целое число)
+    using reference =  int&; // Определяем тип ссылки на значение (ссылка на целое число)
+    Iterator(pointer ptr):_ptr(ptr){}; // Конструктор итератора: принимает указатель и инициализирует _ptr
+    reference operator*()const{return *_ptr;}; // Перегружаем оператор *: возвращает ссылку на значение, на которое указывает итератор
+    pointer operator->(){return _ptr;}; // Перегружаем оператор ->: возвращает указатель на значение, на которое указывает итератор (хотя здесь это не очень осмысленно, так как value_type - int)
+    Iterator operator++(int){ // Перегружаем постфиксный оператор ++ (инкремент)
+        Iterator tmp=*this; // Создаем временную копию текущего итератора
+        ++(*this); // Увеличиваем текущий итератор (вызываем префиксный инкремент)
+        return tmp; // Возвращаем временную копию (старое значение итератора)
     };
-    Iterator& operator++(){
-        _ptr++;
-        return *this;
+    Iterator& operator++(){ // Перегружаем префиксный оператор ++ (инкремент)
+        _ptr++; // Увеличиваем указатель (переходим к следующему элементу)
+        return *this; // Возвращаем ссылку на текущий итератор
     }
-    friend bool operator==(const Iterator& a,const Iterator& b){
-        return a._ptr==b._ptr;
+    friend bool operator==(const Iterator& a,const Iterator& b){ // Дружественная функция для перегрузки оператора == (равенство)
+        return a._ptr==b._ptr; // Сравниваем указатели
     }
-    friend bool operator!=(const Iterator& a,const Iterator& b){
-        return a._ptr!=b._ptr;
+    friend bool operator!=(const Iterator& a,const Iterator& b){ // Дружественная функция для перегрузки оператора != (неравенство)
+        return a._ptr!=b._ptr; // Сравниваем указатели
     }
-private:
-    pointer _ptr;
+private: // Приватные члены структуры
+    pointer _ptr; // Указатель на текущий элемент
 
 };
 
-class IntArr{
+class IntArr{ // Объявляем класс IntArr
 
-private:
-int _data[99];
-public:
-    const Iterator cbegin(){
-        return Iterator(& _data[0]);
-
-    }
-    const Iterator cend(){
-        return Iterator(& _data[99]);
-        
-    }
+private: // Приватные члены класса
+int _data[99]; // Массив целых чисел размером 99
+public: // Публичные члены класса
+    const Iterator cbegin(){ // Метод для получения константного итератора, указывающего на начало массива
+        return Iterator(& _data[0]); // Возвращаем итератор, инициализированный указателем на первый элемент массива
+        // cbegin() возвращает константный итератор, но он сам не константный, что немного странно
+}
+const Iterator cend(){ // Метод для получения константного итератора, указывающего на конец массива
+return Iterator(& _data[99]); // Возвращаем итератор, инициализированный указателем *за* последний элемент массива (end iterator)
+// Здесь потенциальная ошибка: & _data[99] указывает на память за пределами массива _data.  Правильно было бы & _data[98] + 1,
+// но это эквивалентно, так как это "past-the-end" iterator.
+}
 
 
 };
 
-struct ConstIterator{
-    using iterator_category = std::forward_iterator_tag;
-    using difference_type = std::ptrdiff_t;
-    using value_type = int;
-    using pointer=  const int*;
-    using reference =  const int&;
-    ConstIterator(const pointer ptr):_ptr(ptr){};
-    const reference operator*()const{return *_ptr;};
-    const pointer operator->(){return _ptr;};
-    ConstIterator operator++(int){
-        ConstIterator tmp=*this;
-        ++(*this);
-        return tmp;
+struct ConstIterator{ // Объявляем структуру ConstIterator
+    using iterator_category = std::forward_iterator_tag; // Определяем категорию итератора: forward_iterator (однонаправленный)
+    using difference_type = std::ptrdiff_t; // Определяем тип для разности между итераторами (обычно для вычисления расстояния между элементами)
+    using value_type = int; // Определяем тип значения, на которое указывает итератор (целое число)
+    using pointer=  const int*; // Определяем тип указателя на константное значение (указатель на константное целое число)
+    using reference =  const int&; // Определяем тип ссылки на константное значение (ссылка на константное целое число)
+    ConstIterator(const pointer ptr):_ptr(ptr){}; // Конструктор константного итератора: принимает константный указатель и инициализирует _ptr
+    const reference operator*()const{return *_ptr;}; // Перегружаем оператор *: возвращает константную ссылку на значение, на которое указывает итератор
+    const pointer operator->(){return _ptr;}; // Перегружаем оператор ->: возвращает константный указатель на значение, на которое указывает итератор
+    ConstIterator operator++(int){ // Перегружаем постфиксный оператор ++ (инкремент)
+    ConstIterator tmp=*this; // Создаем временную копию текущего константного итератора
+        ++(*this); // Увеличиваем текущий константный итератор (вызываем префиксный инкремент)
+        return tmp; // Возвращаем временную копию (старое значение итератора)
     };
-    ConstIterator& operator++(){
-        _ptr++;
-        return *this;
+    ConstIterator& operator++(){ // Перегружаем префиксный оператор ++ (инкремент)
+        _ptr++; // Увеличиваем указатель (переходим к следующему элементу)
+        return *this; // Возвращаем ссылку на текущий константный итератор
     }
-    friend bool operator==(const ConstIterator& a,const ConstIterator& b){
-        return a._ptr==b._ptr;
+    friend bool operator==(const ConstIterator& a,const ConstIterator& b){ // Дружественная функция для перегрузки оператора == (равенство)
+        return a._ptr==b._ptr; // Сравниваем указатели
     }
-    friend bool operator!=(const ConstIterator& a,const ConstIterator& b){
-        return a._ptr!=b._ptr;
+    friend bool operator!=(const ConstIterator& a,const ConstIterator& b){ // Дружественная функция для перегрузки оператора != (неравенство)
+        return a._ptr!=b._ptr; // Сравниваем указатели
     }
-private:
-    pointer _ptr;
+private: // Приватные члены структуры
+    pointer _ptr; // Указатель на текущий элемент (константный)
 
 };
+
 

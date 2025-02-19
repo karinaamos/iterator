@@ -1,7 +1,8 @@
 [
 {
-  "directory": "/home/s23380014@unn.global/amos/c++/4 sem/iterator/build",
-  "command": "/usr/bin/g++-12   -g -o CMakeFiles/main.dir/main.cpp.o -c \"/home/s23380014@unn.global/amos/c++/4 sem/iterator/main.cpp\"",
-  "file": "/home/s23380014@unn.global/amos/c++/4 sem/iterator/main.cpp"
+  "directory": "C:/PROGA/4 sem/iterator/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -g -o CMakeFiles\\main.dir\\main.cpp.obj -c \"C:\\PROGA\\4 sem\\iterator\\main.cpp\"",
+  "file": "C:\\PROGA\\4 sem\\iterator\\main.cpp",
+  "output": "CMakeFiles\\main.dir\\main.cpp.obj"
 }
 ]
