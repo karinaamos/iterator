@@ -73,56 +73,56 @@ public:
             return; // Если список пуст или указатель нулевой, выходим из функции (ничего не удаляем)
         }
 
-        if (_head == node) {
-            _head = _head->next;
-            if (_head == nullptr) {
-                _tail = nullptr;
+        if (_head == node) { // Проверяем, является ли удаляемый узел головой списка
+            _head = _head->next; // Обновляем указатель головы списка, перенаправляя его на следующий узел (или nullptr, если это был единственный узел)
+            if (_head == nullptr) { // Если после удаления головы список стал пустым
+                _tail = nullptr; // Обнуляем указатель хвоста списка, так как список теперь пуст
             }
-            delete node;
-            return;
+            delete node; // Освобождаем память, занимаемую удаленным узлом
+            return; // Выходим из функции, так как удаление выполнено
         }
 
-        Node<T>* current = _head;
-        while (current->next != nullptr && current->next != node) {
-            current = current->next;
+        Node<T>* current = _head; // Создаем указатель 'current' и инициализируем его головой списка
+        while (current->next != nullptr && current->next != node) { // Пока не достигнут конец списка или не найден узел, предшествующий удаляемому
+            current = current->next; // Перемещаем указатель 'current' на следующий узел
         }
 
-        if (current->next == nullptr) {
-            return;
+        if (current->next == nullptr) { // Если узел, который нужно удалить, не найден в списке
+            return; // Выходим из функции, так как удалять нечего
         }
 
-        current->next = node->next;
+        current->next = node->next; // Удаляем узел из списка, перенаправляя указатель 'next' текущего узла на узел, следующий за удаляемым
 
-        if (_tail == node) {
-            _tail = current;
+        if (_tail == node) { // Если удаляемый узел был хвостом списка
+            _tail = current; // Обновляем указатель хвоста списка, устанавливая его на текущий узел
         }
 
-        delete node;
+        delete node; // Освобождаем память, занимаемую удаленным узлом
     }
 
-    ListIterator<T> begin(){
-        return ListIterator<T>(_head);
+    ListIterator<T> begin(){ // Функция для получения итератора на начало списка
+        return ListIterator<T>(_head); // Возвращаем итератор, указывающий на голову списка
     }
 
-    ListIterator<T> end(){
-        return ListIterator<T>(nullptr);
+    ListIterator<T> end(){ // Функция для получения итератора на конец списка
+        return ListIterator<T>(nullptr); // Возвращаем итератор, указывающий на nullptr (конец списка)
     }
 
-    ~MyForwardList() {
-        Node<T>* current = _head;
-        while (current != nullptr) {
-            Node<T>* next = current->next;
-            delete current;
-            current = next;
+    ~MyForwardList() { // Деструктор класса MyForwardList
+        Node<T>* current = _head; // Создаем указатель 'current' и инициализируем его головой списка
+        while (current != nullptr) { // Пока не достигнут конец списка
+            Node<T>* next = current->next; // Запоминаем указатель на следующий узел
+            delete current; // Освобождаем память, занимаемую текущим узлом
+            current = next; // Перемещаем указатель 'current' на следующий узел
         }
-        _head = nullptr;
-        _tail = nullptr;
+        _head = nullptr; // Обнуляем указатель головы списка
+        _tail = nullptr; // Обнуляем указатель хвоста списка
     }
 
-    void printList() {
-        for (ListIterator<T> it = begin(); it != end(); ++it) {
-            std::cout << it->data << " ";
+    void printList() { // Функция для вывода содержимого списка в консоль
+        for (ListIterator<T> it = begin(); it != end(); ++it) { // Перебираем список с помощью итератора
+            std::cout << it->data << " "; // Выводим данные текущего узла
         }
-        std::cout << std::endl;
+        std::cout << std::endl; // Выводим символ новой строки в конце
     }
 };
